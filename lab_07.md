@@ -58,12 +58,11 @@ SELECT CONCAT(k1.nazwa,' - ',k2.nazwa) FROM kreatura k1, kreatura k2
 ```
 ### Zadanie 5 - Zła nowina
 ```sql
-SELECT kreatura.rodzaj, AVG(zasob.waga) FROM kreatura 
+SELECT kreatura.rodzaj, AVG(zasob.waga*zasob.ilosc) FROM kreatura 
 	JOIN ekwipunek ON kreatura.idKreatury = ekwipunek.idKreatury 
 	JOIN zasob ON ekwipunek.idZasobu = zasob.idZasobu 
-	WHERE kreatura.rodzaj NOT IN ('malpa', 'waz') 
-	GROUP BY kreatura.rodzaj 
-	HAVING SUM(ekwipunek.ilosc) < 30;
+	WHERE kreatura.rodzaj NOT IN ('malpa', 'waz') AND ekwipunek.ilosc < 30
+	GROUP BY kreatura.rodzaj;
 
 SELECT rodzaj, MAX(nazwa), MAX(dataUr), MIN(nazwa), MIN(dataUr)
 	FROM kreatura
