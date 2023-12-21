@@ -54,18 +54,32 @@ SELECT wyprawa.nazwa, etapy_wyprawy.kolejnosc, sektor.nazwa, kreatura.nazwa FROM
 SELECT sektor.nazwa, sektor.id_sektora, IFNULL(COUNT(etapy_wyprawy.sektor), 0) AS liczba_odwiedzin FROM sektor 
 	LEFT JOIN etapy_wyprawy ON etapy_wyprawy.sektor = sektor.id_sektora 
 	LEFT JOIN wyprawa ON etapy_wyprawy.idWyprawy = wyprawa.id_wyprawy 
-	GROUP BY id_sektora
+	GROUP BY id_sektora;
 
-SELECT kreatura.nazwa, IF(COUNT(uczestnicy.id_uczestnika)>0, 'bral udzial w wyprawie', 'nie bral udzialu w wyprawie') FROM kreatura 
+SELECT kreatura.nazwa, IF(COUNT(uczestnicy.id_uczestnika)>0, 'bral udzial w wyprawie', 'nie bral udzialu w wyprawie') czy_bral_udzial FROM kreatura 
 	LEFT JOIN uczestnicy ON kreatura.idKreatury = uczestnicy.id_uczestnika 
 	LEFT JOIN wyprawa ON wyprawa.id_wyprawy = uczestnicy.id_wyprawy 
 	GROUP BY kreatura.nazwa;
 ```
 ### Zadanie 4 - Pułapka
 ```sql
-SELECT wyprawa.nazwa, SUM(LENGTH(etapy_wyprawy.dziennik)) AS suma_znakow FROM wyprawa 
+SELECT wyprawa.nazwa, SUM(LENGTH(etapy_wyprawy.dziennik)) suma_znakow FROM wyprawa 
 	JOIN etapy_wyprawy ON wyprawa.id_wyprawy = etapy_wyprawy.idWyprawy 
 	GROUP BY wyprawa.nazwa 
 	HAVING suma_znakow < 400;
+
+SELECT w.id_wyprawy, w.nazwa, SUM(z.waga*e.ilosc)/COUNT(DISTINCT u.id_uczestnika) srednia_waga_niesionych_zasobow FROM wyprawa w
+	JOIN uczestnicy u ON u.id_wyprawy = w.id_wyprawy
+	JOIN ekwipunek e ON e.idKreatury = u.id_uczestnika
+	JOIN zasob z ON e.idZasobu = z.idZasobu
+	GROUP BY w.id_wyprawy;
 ```
 ### Zadanie 5 - Tchórz
+```sql
+SELECT kreatura.nazwa, DATEDIFF(wyprawa.data_rozpoczecia, kreatura.dataUr) FROM kreatura 
+	JOIN uczestnicy ON uczestnicy.id_uczestnika = kreatura.idKreatury 
+	JOIN wyprawa ON wyprawa.id_wyprawy = uczestnicy.id_wyprawy 
+	JOIN etapy_wyprawy ON wyprawa.id_wyprawy = etapy_wyprawy.idWyprawy 
+	JOIN sektor ON etapy_wyprawy.sektor = sektor.id_sektora 
+	WHERE sektor.nazwa = 'Chatka Dziadka';
+```
