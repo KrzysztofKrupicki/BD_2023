@@ -53,13 +53,16 @@ DELIMITER ;
 CALL eliksir_sily(100);
 
 DELIMITER $$
-CREATE PROCEDURE powieksz_tekst(IN tekst VARCHAR(255))
+CREATE FUNCTION powieksz_tekst(tekst VARCHAR(255)) 
+RETURNS VARCHAR(255)
 BEGIN 
-SELECT UPPER(tekst) powieksz_tekst;
+DECLARE wynik VARCHAR(255);
+SET wynik = UPPER(tekst);
+RETURN wynik;
 END
 $$
 DELIMITER ;
-CALL powieksz_tekst('hello world');
+SELECT powieksz_tekst('hello world');
 ```
 ### Zadanie 4 - Salwa śmiechu
 ```sql
@@ -94,3 +97,22 @@ $$
 DELIMITER ;
 ```
 ### Zadanie 5 - Happy End
+```sql
+DELIMITER $$
+CREATE PROCEDURE avg_suma_max_udzwig_kreatura(OUT avg DECIMAL(10,2), OUT suma DECIMAL(10,2), OUT maks DECIMAL(10,2))
+BEGIN 
+SELECT AVG(udzwig), SUM(udzwig), MAX(udzwig) FROM kreatura;
+END
+$$
+DELIMITER ;
+CALL avg_suma_max_udzwig_kreatura(@avg, @suma, @maks);
+
+DELIMITER $$
+CREATE PROCEDURE wyprawa_sektor(IN id_w INT, OUT nazwa_sektora VARCHAR(255))
+BEGIN 
+SELECT CONCAT(sektor.wspolrzedna_x, wspolrzedna_y) FROM wyprawa JOIN etapy_wyprawy ON wyprawa.id_wyprawy = etapy_wyprawy.idWyprawy JOIN sektor ON etapy_wyprawy.sektor = sektor.id_sektora WHERE wyprawa.id_wyprawy = id_w ORDER BY etapy_wyprawy.idEtapu;
+END
+$$
+DELIMITER ;
+CALL wyprawa_sektor(2, @nazwa_sektora);
+```
