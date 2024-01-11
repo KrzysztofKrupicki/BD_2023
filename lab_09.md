@@ -1,4 +1,5 @@
 ### Zadanie 1 - Dziura
+```sql
 DELIMITER //
 CREATE TRIGGER kreatura_before_insert
 BEFORE INSERT ON kreatura
@@ -24,8 +25,9 @@ END IF;
 END
 //
 DELIMITER ;
-
+```
 ### Zadanie 2 - Futro
+```sql
 CREATE TABLE archiwum_wypraw LIKE wyprawa;
 ALTER TABLE archiwum_wypraw MODIFY kierownik VARCHAR(200);
 
@@ -38,8 +40,9 @@ INSERT INTO archiwum_wypraw SELECT wyprawa.id_wyprawy, wyprawa.nazwa, wyprawa.da
 END
 //
 DELIMITER ;
-
+```
 ### Zadanie 3 - Spalony
+```sql
 DELIMITER $$
 CREATE PROCEDURE eliksir_sily(IN id int)
 BEGIN 
@@ -57,8 +60,9 @@ END
 $$
 DELIMITER ;
 CALL powieksz_tekst('hello world');
-
+```
 ### Zadanie 4 - Salwa śmiechu
+```sql
 CREATE TABLE system_alarmowy(id_alarmu INT AUTO_INCREMENT PRIMARY KEY, wiadomosc VARCHAR(255));
 
 DELIMITER $$
@@ -88,5 +92,5 @@ END IF;
 END
 $$
 DELIMITER ;
-
+```
 ### Zadanie 5 - Happy End
